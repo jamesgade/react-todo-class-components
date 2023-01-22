@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "description": "Dentist Appointment",
+      "date": "Jan 25th at 11:30AM",
+      "reminder": true
+    },
+    {
+      "id": 2,
+      "description": "Anniversery",
+      "date": "Jan 22th at 1:30AM",
+      "reminder": false
+    },
+    {
+      "id": 3,
+      "description": "Republic Day",
+      "date": "Jan 26th",
+      "reminder": true
+    }
+  ]
+}

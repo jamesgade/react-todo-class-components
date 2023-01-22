@@ -5,6 +5,7 @@ import { Component } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import About from "./components/About";
 import Footer from "./components/Footer";
+import { addTaskToDB, deleteTaskFormServer, fecthTasks, toggleReminderInSever } from './utils/tasksRequests';
 
 class App extends Component {
 
@@ -12,49 +13,42 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			tasks: [
-				{
-					id: 1,
-					description: 'Dentist Appointment',
-					date: 'Jan 25th at 11:30AM',
-					reminder: true
-				},
-				{
-					id: 2,
-					description: 'Anniversery',
-					date: 'Jan 22th at 1:30AM',
-					reminder: false
-				},
-				{
-					id: 3,
-					description: 'Republic Day',
-					date: 'Jan 26th',
-					reminder: true
-				},
-			],
+			tasks: [],
 			showAddForm: false
 		}
 
 		this.deleteTask = this.deleteTask.bind(this);
 	}
 
-	addTask = (task) => {
-		const id = Math.floor(Math.random() * 10000) + 1;
-		const newTask = { id, ...task }
-		this.setState((prevState) => ({
-			tasks: [newTask, ...prevState.tasks]
+	componentDidMount() {
+		this.getTasks();
+	}
+
+	getTasks = async () => {
+		const tasksFromDB = await fecthTasks();
+		this.setState({
+			tasks: tasksFromDB
+		})
+	}
+
+	addTask = async (task) => {
+		const data = await addTaskToDB(task);
+		this.setState(prevState => ({
+			tasks: [data, ...prevState.tasks]
 		}))
 	}
 
-	deleteTask = (id) => {
+	deleteTask = async (id) => {
+		await deleteTaskFormServer(id);
 		this.setState((prevState) => ({
 			tasks: prevState.tasks.filter(task => task.id !== id)
 		}))
 	}
 
-	toggleReminder = (id) => {
+	toggleReminder = async (id) => {
+		const updatedTask = await toggleReminderInSever(id);
 		this.setState((prevState) => ({
-			tasks: prevState.tasks.map(task => task.id === id ? { ...task, reminder: !task.reminder } : task)
+			tasks: prevState.tasks.map((task) => task.id === id ? { ...task, reminder: updatedTask.reminder } : task)
 		}))
 	}
 
