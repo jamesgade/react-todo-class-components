@@ -15,7 +15,7 @@ class AddTask extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         const name = event.target.name
 
         this.setState({
